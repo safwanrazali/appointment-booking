@@ -24,5 +24,7 @@ export async function connectDB() {
 
   cached.conn = await cached.promise;
 
+  console.log("Connected DB:", cached.conn.connection.name);
+
   return cached.conn;
 }
