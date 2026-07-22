@@ -1,3 +1,4 @@
+import AdminLayout from "../../components/admin/AdminLayout";
 import { useEffect, useState } from "react";
 
 export default function HolidaysPage() {
@@ -99,6 +100,7 @@ export default function HolidaysPage() {
   };
 
   return (
+    <AdminLayout>
     <div className="container py-5">
       <div className="row justify-content-center">
 
@@ -238,5 +240,6 @@ export default function HolidaysPage() {
 
       </div>
     </div>
+    </AdminLayout>
   );
 }
