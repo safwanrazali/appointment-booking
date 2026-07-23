@@ -11,6 +11,8 @@ export default function BookingForm() {
 
   const [message, setMessage] = useState("");
 
+  const [bookingResult, setBookingResult] = useState(null);
+
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -82,6 +84,7 @@ export default function BookingForm() {
 
     setLoading(true);
     setMessage("");
+    setBookingResult(null);
 
     try {
       const response = await fetch("/api/bookings", {
@@ -99,18 +102,11 @@ export default function BookingForm() {
       const data = await response.json();
 
       if (data.success) {
-        setMessage(
-          `Booking submitted successfully.
-
-Reference Number:
-${data.data?.referenceNo || "-"}
-
-Date:
-${formatDisplayDate(selectedDate)}
-
-Slot:
-${selectedSlot}`,
-        );
+        setBookingResult({
+          referenceNo: data.data?.referenceNo || "-",
+          date: formatDisplayDate(selectedDate),
+          slot: selectedSlot,
+        });
 
         setForm({
           requesterName: "",
@@ -135,98 +131,178 @@ ${selectedSlot}`,
   };
 
   return (
-    <div className="card shadow-sm border-0">
-      <div className="card-body p-4">
-        <h4 className="mb-4">Select Appointment Date</h4>
+    <div>
+      <div className="row g-4 g-lg-5">
+        <div className="col-lg-6">
+          <h2 className="section-heading">
+            <span className="section-heading__icon">
+              <i className="bi bi-calendar3" />
+            </span>
+            Select Appointment Date
+          </h2>
 
-        <BookingCalendar
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-        />
+          <BookingCalendar
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
 
-        <hr />
-
-        <h4 className="mb-3">Available Slots</h4>
-
-        <SlotSelector
-          availableSlots={availableSlots}
-          selectedSlot={selectedSlot}
-          setSelectedSlot={setSelectedSlot}
-        />
-
-        <hr />
-
-        {message && (
-          <div className="alert alert-info">
-            <pre className="mb-0">{message}</pre>
+          <div className="calendar-legend">
+            <span>
+              <span className="dot dot--today" /> Today
+            </span>
+            <span>
+              <span className="dot dot--selected" /> Selected
+            </span>
+            <span>
+              <span className="dot dot--holiday" /> Public holiday
+            </span>
+            <span>
+              <span className="dot dot--booked" /> Fully booked
+            </span>
           </div>
-        )}
+        </div>
 
-        <form onSubmit={handleSubmit} className="mt-4">
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Full Name"
-            value={form.requesterName}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                requesterName: e.target.value,
-              })
-            }
-            required
+        <div className="col-lg-6">
+          <h2 className="section-heading">
+            <span className="section-heading__icon">
+              <i className="bi bi-clock-history" />
+            </span>
+            Available Slots — {formatDisplayDate(selectedDate)}
+          </h2>
+
+          <SlotSelector
+            availableSlots={availableSlots}
+            selectedSlot={selectedSlot}
+            setSelectedSlot={setSelectedSlot}
           />
 
-          <input
-            type="email"
-            className="form-control mb-3"
-            placeholder="Email Address"
-            value={form.requesterEmail}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                requesterEmail: e.target.value,
-              })
-            }
-            required
-          />
+          {bookingResult && (
+            <div className="alert alert-success mt-4 d-flex gap-3 align-items-start">
+              <i className="bi bi-check-circle-fill fs-4" />
+              <div>
+                <div className="fw-semibold mb-1">
+                  Booking submitted successfully
+                </div>
+                <div className="mb-1">
+                  <span className="ref-chip">
+                    <i className="bi bi-hash" />
+                    {bookingResult.referenceNo}
+                  </span>
+                </div>
+                <div className="small text-muted">
+                  {bookingResult.date} · {bookingResult.slot}
+                </div>
+              </div>
+            </div>
+          )}
 
-          <input
-            type="tel"
-            className="form-control mb-3"
-            placeholder="Phone Number"
-            value={form.requesterPhone}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                requesterPhone: e.target.value,
-              })
-            }
-            required
-          />
+          {message && (
+            <div className="alert alert-danger mt-4 d-flex gap-2 align-items-start">
+              <i className="bi bi-exclamation-triangle-fill" />
+              <div>{message}</div>
+            </div>
+          )}
 
-          <textarea
-            rows="4"
-            className="form-control mb-3"
-            placeholder="Purpose of Appointment"
-            value={form.purpose}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                purpose: e.target.value,
-              })
-            }
-            required
-          />
+          <hr className="my-4" />
 
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={!selectedSlot || loading}
-          >
-            {loading ? "Submitting..." : "Submit Booking"}
-          </button>
-        </form>
+          <h2 className="section-heading">
+            <span className="section-heading__icon">
+              <i className="bi bi-person-lines-fill" />
+            </span>
+            Your Details
+          </h2>
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label small text-muted">Full Name</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="e.g. Ahmad bin Ali"
+                value={form.requesterName}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    requesterName: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label small text-muted">
+                Email Address
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                placeholder="name@example.com"
+                value={form.requesterEmail}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    requesterEmail: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label small text-muted">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                placeholder="01X-XXXXXXX"
+                value={form.requesterPhone}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    requesterPhone: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="form-label small text-muted">
+                Purpose of Appointment
+              </label>
+              <textarea
+                rows="4"
+                className="form-control"
+                placeholder="Briefly describe what you need help with"
+                value={form.purpose}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    purpose: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+              disabled={!selectedSlot || loading}
+            >
+              {loading ? (
+                "Submitting..."
+              ) : (
+                <>
+                  <i className="bi bi-send-check" />
+                  Submit Booking
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,61 @@
-$primary: #4f46e5;
-$secondary: #7c3aed;
+// ============================================================
+// Design tokens — "Secure Terminal" theme
+// A trustworthy, tech-forward palette for a government
+// cyber-security agency's public booking platform.
+// ============================================================
 
-$success: #10b981;
-$danger: #ef4444;
+// ---- Core palette -------------------------------------------------
+$navy-950: #060f24;
+$navy-900: #0a1a33;
+$navy-800: #10254a;
+$navy-700: #16305e;
+$navy-600: #1c3e78;
 
-$background: #f8fafc;
+$cyan-500: #14c7d9;
+$cyan-400: #4fe0ee;
+$cyan-100: #d9f9fc;
+
+$indigo-500: #4c6fff;
+$indigo-300: #93a8ff;
+
+// ---- Semantic colors ------------------------------------------------
+$primary: $navy-800;
+$primary-dark: $navy-950;
+$secondary: $indigo-500;
+$accent: $cyan-500;
+$accent-light: $cyan-400;
+
+$success: #17a673;
+$success-soft: #e4f8f1;
+$danger: #e0455a;
+$danger-soft: #fdeaec;
+$warning: #f2a93b;
+$warning-soft: #fdf3e2;
+$info: $indigo-500;
+
+$background: #f2f6fc;
 $surface: #ffffff;
+$surface-alt: #eaf1fb;
 
-$text: #0f172a;
-$text-muted: #64748b;
+$text: #0b1b33;
+$text-muted: #5c6b85;
+$text-inverse: #f4f8fd;
+$border: #dfe7f3;
+
+// ---- Typography -------------------------------------------------
+$font-display: "Space Grotesk", "Segoe UI", sans-serif;
+$font-body: "Inter", "Segoe UI", sans-serif;
+$font-mono: "JetBrains Mono", "Courier New", monospace;
+
+// ---- Radii, shadows, motion -------------------------------------------------
+$radius-sm: 10px;
+$radius-md: 16px;
+$radius-lg: 22px;
+$radius-pill: 999px;
+
+$shadow-sm: 0 2px 8px rgba(10, 26, 51, 0.06);
+$shadow-md: 0 12px 32px rgba(10, 26, 51, 0.1);
+$shadow-lg: 0 24px 60px rgba(10, 26, 51, 0.18);
+$shadow-glow: 0 0 0 4px rgba(20, 199, 217, 0.16);
+
+$ease: cubic-bezier(0.22, 1, 0.36, 1);

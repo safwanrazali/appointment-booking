@@ -1,26 +1,472 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
 @import "./variables";
 @import "./calendar.scss";
 @import "./admin.scss";
 
+// ============================================================
+// Base
+// ============================================================
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: $background;
   color: $text;
-  font-family: Inter, sans-serif;
+  font-family: $font-body;
+  -webkit-font-smoothing: antialiased;
 }
 
-.hero-banner {
-  width: 100%;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-display;
+  color: $text;
+  letter-spacing: -0.01em;
+}
 
-  img {
-    width: 100%;
-    display: block;
-    border: 2px solid #000;
-    border-radius: 1rem;
+a {
+  color: $secondary;
+  text-decoration: none;
+
+  &:hover {
+    color: $accent;
+  }
+}
+
+::selection {
+  background: rgba($accent, 0.25);
+}
+
+// Visible keyboard focus everywhere
+:focus-visible {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ============================================================
+// Mesh / circuit background — the signature motif.
+// A quiet nod to network topology, reused across the hero,
+// section dividers and the admin sidebar.
+// ============================================================
+.mesh-bg {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(
+        circle at 15% 20%,
+        rgba($accent, 0.16) 0,
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 85% 75%,
+        rgba($indigo-500, 0.22) 0,
+        transparent 45%
+      ),
+      linear-gradient(rgba($accent, 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($accent, 0.09) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      100% 100%,
+      42px 42px,
+      42px 42px;
+    pointer-events: none;
   }
 
-  @media (max-width: 768px) {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        2px 2px at 20% 30%,
+        rgba($accent-light, 0.9),
+        transparent
+      ),
+      radial-gradient(
+        2px 2px at 70% 60%,
+        rgba($accent-light, 0.7),
+        transparent
+      ),
+      radial-gradient(2px 2px at 45% 80%, rgba($indigo-300, 0.8), transparent),
+      radial-gradient(2px 2px at 88% 22%, rgba($accent-light, 0.6), transparent);
+    pointer-events: none;
+  }
+}
+
+// ============================================================
+// Top bar
+// ============================================================
+.site-topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1.25rem 0;
+
+  .admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: $primary;
+    padding: 0.5rem 1rem;
+    border-radius: $radius-pill;
+    background: $surface;
+    border: 1px solid $border;
+    box-shadow: $shadow-sm;
+    transition: all 0.2s $ease;
+
+    &:hover {
+      color: $navy-900;
+      border-color: $accent;
+      box-shadow: $shadow-glow;
+    }
+  }
+}
+
+// ============================================================
+// Hero
+// ============================================================
+.hero-banner {
+  width: 100%;
+  border-radius: $radius-lg;
+  background: linear-gradient(
+    135deg,
+    $navy-950 0%,
+    $navy-800 55%,
+    #0b3f57 100%
+  );
+  box-shadow: $shadow-lg;
+  padding: 3.25rem 2.5rem;
+  color: $text-inverse;
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: $font-mono;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $accent-light;
+    background: rgba($accent, 0.12);
+    border: 1px solid rgba($accent, 0.35);
+    padding: 0.35rem 0.85rem;
+    border-radius: $radius-pill;
+    margin-bottom: 1.25rem;
+
+    &::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: $accent-light;
+      box-shadow: 0 0 8px $accent-light;
+    }
+  }
+
+  .hero-media {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+
     img {
+      display: block;
+      width: 100%;
       height: auto;
     }
   }
+
+  @media (max-width: 768px) {
+    padding: 2rem 1.25rem;
+    border-radius: 16px;
+  }
+}
+
+.hero-title {
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.65rem;
+}
+
+.hero-subtitle {
+  color: rgba($text-inverse, 0.78);
+  font-size: 1.05rem;
+  max-width: 46ch;
+  margin: 0;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 2.25rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+
+  .stat {
+    .stat-value {
+      font-family: $font-mono;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: $accent-light;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: rgba($text-inverse, 0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+  }
+}
+
+// ============================================================
+// Section shell for the booking card
+// ============================================================
+.booking-shell {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+  padding: 2.25rem;
+  margin-top: -2.25rem;
+  position: relative;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+
+  .section-heading__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, $primary, $secondary);
+    color: #fff;
+    font-size: 1rem;
+    flex: none;
+  }
+}
+
+// ============================================================
+// Bootstrap component overrides
+// ============================================================
+.btn {
+  border-radius: $radius-sm;
+  font-weight: 600;
+  font-family: $font-body;
+  padding: 0.65rem 1.35rem;
+  transition:
+    transform 0.15s $ease,
+    box-shadow 0.2s $ease,
+    background 0.2s $ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+  border: none;
+  box-shadow: 0 8px 20px rgba($secondary, 0.28);
+
+  &:hover,
+  &:focus {
+    background: linear-gradient(135deg, $navy-900 0%, $secondary 120%);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba($secondary, 0.36);
+  }
+
+  &:disabled {
+    background: $border;
+    color: $text-muted;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.btn-outline-primary {
+  border: 1.5px solid $border;
+  color: $primary;
+  background: $surface;
+
+  &:hover,
+  &:focus {
+    background: $surface-alt;
+    border-color: $accent;
+    color: $navy-900;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-danger {
+  background: $danger;
+  border: none;
+
+  &:hover {
+    background: darken($danger, 6%);
+  }
+}
+
+.btn-warning {
+  background: $accent;
+  border: none;
+  color: $navy-950;
+
+  &:hover {
+    background: $accent-light;
+    color: $navy-950;
+  }
+}
+
+.card {
+  border: 1px solid $border;
+  border-radius: 16px;
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.form-control,
+textarea.form-control {
+  border: 1.5px solid $border;
+  border-radius: $radius-sm;
+  padding: 0.7rem 0.95rem;
+  font-family: $font-body;
+  color: $text;
+  background: $surface-alt;
+  transition:
+    border-color 0.2s $ease,
+    box-shadow 0.2s $ease,
+    background 0.2s $ease;
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: $shadow-glow;
+    background: $surface;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.alert {
+  border: none;
+  border-radius: $radius-sm;
+  border-left: 4px solid transparent;
+}
+
+.alert-info {
+  background: rgba($secondary, 0.08);
+  border-left-color: $secondary;
+  color: $navy-900;
+}
+
+.alert-warning {
+  background: $warning-soft;
+  border-left-color: $warning;
+  color: #7a5109;
+}
+
+.alert-danger {
+  background: $danger-soft;
+  border-left-color: $danger;
+  color: #7c1626;
+}
+
+.alert-success {
+  background: $success-soft;
+  border-left-color: $success;
+  color: #0e5f43;
+}
+
+.badge {
+  font-weight: 600;
+  border-radius: $radius-pill;
+  padding: 0.4em 0.85em;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.bg-success {
+  background: $success-soft !important;
+  color: $success !important;
+}
+
+.bg-danger {
+  background: $danger-soft !important;
+  color: $danger !important;
+}
+
+.bg-primary {
+  background: rgba($secondary, 0.12) !important;
+  color: $navy-900 !important;
+}
+
+.table {
+  --bs-table-hover-bg: #{$surface-alt};
+
+  th {
+    font-family: $font-display;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $text-muted;
+    border-bottom-width: 1px;
+  }
+
+  td {
+    color: $text;
+  }
+}
+
+.text-muted {
+  color: $text-muted !important;
+}
+
+// Reference number / codes rendered like a terminal readout
+.ref-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: $font-mono;
+  font-size: 0.85rem;
+  color: $navy-900;
+  background: $cyan-100;
+  border: 1px solid rgba($accent, 0.35);
+  padding: 0.3rem 0.7rem;
+  border-radius: $radius-sm;
 }

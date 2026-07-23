@@ -1,44 +1,48 @@
-import Image from "next/image";
 import Link from "next/link";
 import BookingForm from "../components/BookingForm";
-import { useRouter } from "next/router";
 
 export default function Home() {
-  const router = useRouter();
-
   return (
-    <div className="container py-5">
-      <nav className="navbar navbar-expand-lg navbar-light justify-content-end">
-        <ul className="nav justify-content-center">
-          <li className="nav-item">
-            <Link className="nav-link" href="/admin">
-              <i className="bi bi-person-circle me-2" />
-              Admin
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <div className="hero-banner">
-        <Image
-          src="/image/banner.png"
-          alt="Klinik Migrasi PQC"
-          width={1400}
-          height={300}
-          priority
-          style={{
-            width: "100%",
-            display: "block",
-          }}
-        />
+    <div className="container py-4 py-md-5">
+      <div className="site-topbar">
+        <Link className="admin-link" href="/admin">
+          <i className="bi bi-shield-lock" />
+          Admin
+        </Link>
       </div>
 
-      <div className="text-center mb-5">
-        <h1>Appointment Booking Platform</h1>
+      <div className="hero-banner mesh-bg">
+        <div className="hero-eyebrow">Secure Digital Service</div>
 
-        <p>Schedule your appointment online.</p>
+        <div className="hero-media mb-4">
+          <img src="/image/banner.png" alt="NACSA and PTPKM" />
+        </div>
+
+        <h1 className="hero-title">Appointment Booking Platform</h1>
+        <p className="hero-subtitle">
+          Schedule your visit to the Migration &amp; Cryptology Clinic in a few
+          clicks — no queues, no paperwork, just pick a slot that works for you.
+        </p>
+
+        <div className="hero-stats">
+          <div className="stat">
+            <div className="stat-value">09:00–18:00</div>
+            <div className="stat-label">Operating Hours</div>
+          </div>
+          <div className="stat">
+            <div className="stat-value">2</div>
+            <div className="stat-label">Daily Slots</div>
+          </div>
+          <div className="stat">
+            <div className="stat-value">24h</div>
+            <div className="stat-label">Advance Notice</div>
+          </div>
+        </div>
       </div>
 
-      <BookingForm />
+      <div className="booking-shell">
+        <BookingForm />
+      </div>
     </div>
   );
 }
