@@ -1,6 +1,12 @@
 import Link from "next/link";
 
 export default function AdminLayout({ children }) {
+  const logout = async () => {
+    await fetch("/api/admin/logout");
+
+    window.location.href = "/admin/login";
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -36,6 +42,11 @@ export default function AdminLayout({ children }) {
                 Holidays
               </Link>
             </div>
+
+            <hr />
+            <button onClick={logout} className="btn btn-danger text-start">
+              Logout
+            </button>
           </div>
         </div>
 
