@@ -1,6 +1,7 @@
 import { connectDB } from "../../../lib/mongodb";
 import Booking from "../../../models/Booking";
 import Holiday from "../../../models/Holiday";
+import { sendBookingNotification } from "../../../lib/email";
 
 export default async function handler(req, res) {
   await connectDB();
@@ -88,6 +89,9 @@ export default async function handler(req, res) {
         appointmentSlot,
         purpose,
       });
+
+      // Send booking notification
+      await sendBookingNotification(booking);
 
       return res.status(201).json({
         success: true,
