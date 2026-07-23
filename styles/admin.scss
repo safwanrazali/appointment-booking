@@ -69,10 +69,12 @@ body {
 }
 
 .admin-logo {
-  color: white;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-md;
+  padding: 0.25rem 0;
 
   .admin-logo__mark {
     width: 38px;

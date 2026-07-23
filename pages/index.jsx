@@ -1,18 +1,17 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import BookingForm from "../components/BookingForm";
 
 export default function Home() {
   return (
     <div className="container py-4 py-md-5">
-      <div className="site-topbar">
-        <Link className="admin-link" href="/admin">
-          <i className="bi bi-shield-lock" />
-          Admin
-        </Link>
-      </div>
-
       <div className="hero-banner mesh-bg">
-        <div className="hero-eyebrow">Secure Digital Service</div>
+        <div className="site-topbar">
+          <Link className="admin-link" href="/admin">
+            <i className="bi bi-shield-lock" />
+            Admin
+          </Link>
+        </div>
 
         <div className="hero-media mb-4">
           <img src="/image/banner.png" alt="NACSA and PTPKM" />

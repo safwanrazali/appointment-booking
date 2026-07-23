@@ -157,7 +157,7 @@ a {
     #0b3f57 100%
   );
   box-shadow: $shadow-lg;
-  padding: 3.25rem 2.5rem;
+  padding: 0.25rem 2.5rem 4rem;
   color: $text-inverse;
 
   .hero-eyebrow {
@@ -194,13 +194,14 @@ a {
     img {
       display: block;
       width: 100%;
-      height: auto;
+      height: 400px;
     }
   }
 
   @media (max-width: 768px) {
-    padding: 2rem 1.25rem;
+    padding: 2rem 1.25rem 5rem;
     border-radius: 16px;
+    height: auto;
   }
 }
 

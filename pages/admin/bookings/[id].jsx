@@ -86,6 +86,12 @@ export default function BookingDetails() {
           </p>
 
           <p>
+            <strong>Agency / Entity:</strong>
+            <br />
+            {booking.agency}
+          </p>
+
+          <p>
             <strong>Date:</strong>
             <br />
             {booking.appointmentDate}

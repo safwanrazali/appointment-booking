@@ -94,6 +94,7 @@ export default function BookingsPage() {
                   <tr>
                     <th>Reference No</th>
                     <th>Name</th>
+                    <th>Agency</th>
                     <th>Date</th>
                     <th>Slot</th>
                     <th>Email</th>
@@ -108,6 +109,8 @@ export default function BookingsPage() {
                         <td>{booking.referenceNo || "-"}</td>
 
                         <td>{booking.requesterName}</td>
+
+                        <td>{booking.agency}</td>
 
                         <td>{booking.appointmentDate}</td>
 

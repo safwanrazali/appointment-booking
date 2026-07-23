@@ -14,6 +14,11 @@ const BookingSchema = new mongoose.Schema(
 
     requesterPhone: {
       type: String,
+      required: false,
+    },
+
+    agency: {
+      type: String,
       required: true,
     },
 
@@ -30,7 +35,7 @@ const BookingSchema = new mongoose.Schema(
 
     purpose: {
       type: String,
-      required: true,
+      required: false,
     },
 
     referenceNo: {

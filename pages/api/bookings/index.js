@@ -15,6 +15,7 @@ export default async function handler(req, res) {
         requesterName,
         requesterEmail,
         requesterPhone,
+        agency,
         appointmentDate,
         appointmentSlot,
         purpose,
@@ -28,6 +29,7 @@ export default async function handler(req, res) {
         !requesterName ||
         !requesterEmail ||
         !requesterPhone ||
+        !agency ||
         !appointmentDate ||
         !appointmentSlot ||
         !purpose
@@ -141,6 +143,7 @@ export default async function handler(req, res) {
         requesterName,
         requesterEmail,
         requesterPhone,
+        agency,
         appointmentDate,
         appointmentSlot,
         purpose,

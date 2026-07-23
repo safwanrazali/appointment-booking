@@ -19,6 +19,7 @@ export default function BookingForm() {
     requesterName: "",
     requesterEmail: "",
     requesterPhone: "",
+    agency: "",
     purpose: "",
   });
 
@@ -154,7 +155,8 @@ export default function BookingForm() {
               <span className="dot dot--selected" /> Selected
             </span>
             <span>
-              <span className="dot dot--holiday" /> Public holiday
+              <span className="dot dot--holiday" /> Public holiday / Not
+              available
             </span>
             <span>
               <span className="dot dot--booked" /> Fully booked
@@ -214,7 +216,9 @@ export default function BookingForm() {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label small text-muted">Full Name</label>
+              <label className="form-label small text-muted">
+                Full Name <span className="text-danger">*</span>
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -232,7 +236,7 @@ export default function BookingForm() {
 
             <div className="mb-3">
               <label className="form-label small text-muted">
-                Email Address
+                Email Address <span className="text-danger">*</span>
               </label>
               <input
                 type="email"
@@ -256,12 +260,30 @@ export default function BookingForm() {
               <input
                 type="tel"
                 className="form-control"
-                placeholder="01X-XXXXXXX"
+                placeholder="0123456789"
                 value={form.requesterPhone}
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    requesterPhone: e.target.value,
+                    requesterPhone: e.target.value.replace(/\D/g, ""),
+                  })
+                }
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label small text-muted">
+                Agency <span className="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="e.g. PTPKM"
+                value={form.agency}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    agency: e.target.value,
                   })
                 }
                 required
@@ -283,7 +305,6 @@ export default function BookingForm() {
                     purpose: e.target.value,
                   })
                 }
-                required
               />
             </div>
 

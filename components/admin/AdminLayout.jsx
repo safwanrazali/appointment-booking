@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -5,7 +7,7 @@ import { useEffect, useState } from "react";
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: "bi-speedometer2", exact: true },
   { href: "/admin/bookings", label: "Bookings", icon: "bi-journal-check" },
-  { href: "/admin/calendar", label: "Calendar", icon: "bi-calendar3-week" },
+  // { href: "/admin/calendar", label: "Calendar", icon: "bi-calendar3-week" },
   { href: "/admin/holidays", label: "Holidays", icon: "bi-sun" },
 ];
 
@@ -45,10 +47,7 @@ export default function AdminLayout({ children }) {
           <i className={`bi ${sidebarOpen ? "bi-x-lg" : "bi-list"}`} />
         </button>
 
-        <div className="admin-mobile-brand">
-          <span className="admin-logo__mark">P</span>
-          PTPKM Admin
-        </div>
+        <div className="admin-mobile-brand">Administrator</div>
       </div>
 
       {/* Backdrop overlay, only rendered/visible on small screens */}
@@ -65,13 +64,14 @@ export default function AdminLayout({ children }) {
       <div className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="p-4">
           <div className="admin-logo mb-4">
-            <span className="admin-logo__mark">P</span>
+            {/* <span className="admin-logo__mark">P</span>
             <div>
               <div className="fs-4 fw-bold">PTPKM</div>
               <small className="text-light opacity-75">
                 Appointment Booking
               </small>
-            </div>
+            </div> */}
+            <img src="/favicon.png" alt="logo" width="80%" />
           </div>
 
           <hr className="border-light opacity-25" />
