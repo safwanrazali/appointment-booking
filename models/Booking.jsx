@@ -24,10 +24,7 @@ const BookingSchema = new mongoose.Schema(
 
     appointmentSlot: {
       type: String,
-      enum: [
-        "09:00-13:00",
-        "14:00-18:00",
-      ],
+      enum: ["09:00-13:00", "14:00-18:00"],
       required: true,
     },
 
@@ -35,10 +32,14 @@ const BookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    referenceNo: {
+      type: String,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 BookingSchema.index(
@@ -48,7 +49,7 @@ BookingSchema.index(
   },
   {
     unique: true,
-  }
+  },
 );
 
 export default mongoose.models.Booking ||

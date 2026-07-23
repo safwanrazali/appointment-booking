@@ -6,9 +6,9 @@ export default async function handler(req, res) {
 
   const { id } = req.query;
 
-  // GET BOOKING DETAILS
-  if (req.method === "GET") {
-    try {
+  try {
+    // GET SINGLE BOOKING
+    if (req.method === "GET") {
       const booking = await Booking.findById(id);
 
       if (!booking) {
@@ -22,33 +22,35 @@ export default async function handler(req, res) {
         success: true,
         data: booking,
       });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        error: error.message,
-      });
     }
-  }
 
-  // DELETE BOOKING
-  if (req.method === "DELETE") {
-    try {
+    // DELETE BOOKING
+    if (req.method === "DELETE") {
+      const booking = await Booking.findById(id);
+
+      if (!booking) {
+        return res.status(404).json({
+          success: false,
+          message: "Booking not found",
+        });
+      }
+
       await Booking.findByIdAndDelete(id);
 
       return res.status(200).json({
         success: true,
-        message: "Booking deleted",
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        error: error.message,
+        message: "Booking deleted successfully",
       });
     }
-  }
 
-  return res.status(405).json({
-    success: false,
-    message: "Method Not Allowed",
-  });
+    return res.status(405).json({
+      success: false,
+      message: "Method Not Allowed",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
 }

@@ -71,8 +71,16 @@ export default async function handler(req, res) {
         });
       }
 
+      // Generate Reference Number
+      const totalBookings = await Booking.countDocuments();
+
+      const referenceNo = `MPQ-${new Date().getFullYear()}-${String(
+        totalBookings + 1,
+      ).padStart(4, "0")}`;
+
       // Create booking
       const booking = await Booking.create({
+        referenceNo,
         requesterName,
         requesterEmail,
         requesterPhone,

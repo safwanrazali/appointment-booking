@@ -29,15 +29,31 @@ export default function BookingDetails() {
   }
 
   const deleteBooking = async () => {
-    const confirmDelete = window.confirm("Delete this booking?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this booking?",
+    );
 
-    if (!confirmDelete) return;
+    if (!confirmed) return;
 
-    await fetch(`/api/bookings/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      const response = await fetch(`/api/bookings/${id}`, {
+        method: "DELETE",
+      });
 
-    router.push("/admin/bookings");
+      const data = await response.json();
+
+      if (!data.success) {
+        alert("Failed to delete booking");
+        return;
+      }
+
+      alert("Booking deleted successfully");
+
+      router.push("/admin/bookings");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    }
   };
 
   return (
@@ -46,6 +62,11 @@ export default function BookingDetails() {
 
       <div className="card shadow-sm">
         <div className="card-body">
+          <p>
+            <strong>Reference No:</strong>
+            <br />
+            {booking.referenceNo}
+          </p>
           <p>
             <strong>Name:</strong>
             <br />
