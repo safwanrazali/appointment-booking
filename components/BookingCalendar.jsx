@@ -2,15 +2,10 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-export default function BookingCalendar({
-  selectedDate,
-  setSelectedDate,
-}) {
-  const [holidays, setHolidays] =
-    useState([]);
+export default function BookingCalendar({ selectedDate, setSelectedDate }) {
+  const [holidays, setHolidays] = useState([]);
 
-  const [fullyBookedDates, setFullyBookedDates] =
-    useState([]);
+  const [fullyBookedDates, setFullyBookedDates] = useState([]);
 
   const formatDate = (date) => {
     return (
@@ -24,19 +19,13 @@ export default function BookingCalendar({
 
   useEffect(() => {
     async function loadStatus() {
-      const response = await fetch(
-        "/api/calendar-status"
-      );
+      const response = await fetch("/api/calendar-status");
 
       const data = await response.json();
 
-      setHolidays(
-        data.holidays || []
-      );
+      setHolidays(data.holidays || []);
 
-      setFullyBookedDates(
-        data.fullyBookedDates || []
-      );
+      setFullyBookedDates(data.fullyBookedDates || []);
     }
 
     loadStatus();
@@ -49,33 +38,34 @@ export default function BookingCalendar({
   };
 
   const isHoliday = (date) => {
-    return holidays.includes(
-      formatDate(date)
-    );
+    return holidays.includes(formatDate(date));
   };
 
   const isFullyBooked = (date) => {
-    return fullyBookedDates.includes(
-      formatDate(date)
-    );
+    return fullyBookedDates.includes(formatDate(date));
   };
+
+  const tomorrow = new Date();
+
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const maxDate = new Date();
+
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
 
   return (
     <Calendar
-      minDate={new Date()}
+      minDate={tomorrow}
+      maxDate={maxDate}
       value={selectedDate}
       onChange={setSelectedDate}
       tileDisabled={({ date }) =>
-        isWeekend(date) ||
-        isHoliday(date) ||
-        isFullyBooked(date)
+        isWeekend(date) || isHoliday(date) || isFullyBooked(date)
       }
       tileClassName={({ date }) => {
-        if (isHoliday(date))
-          return "holiday-date";
+        if (isHoliday(date)) return "holiday-date";
 
-        if (isFullyBooked(date))
-          return "fully-booked-date";
+        if (isFullyBooked(date)) return "fully-booked-date";
 
         return null;
       }}

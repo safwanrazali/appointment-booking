@@ -20,7 +20,10 @@ export default async function handler(req, res) {
         purpose,
       } = req.body;
 
-      // Validate required fields
+      // =========================
+      // REQUIRED FIELDS
+      // =========================
+
       if (
         !requesterName ||
         !requesterEmail ||
@@ -35,11 +38,52 @@ export default async function handler(req, res) {
         });
       }
 
-      // Check weekend
       const selectedDate = new Date(appointmentDate);
+
+      // =========================
+      // MAX 1 YEAR VALIDATION
+      // =========================
+
+      const oneYearLater = new Date();
+
+      oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+
+      if (selectedDate > oneYearLater) {
+        return res.status(400).json({
+          success: false,
+          message: "Booking can only be made within 1 year",
+        });
+      }
+
+      // =========================
+      // MINIMUM 24 HOURS VALIDATION
+      // =========================
+
+      const now = new Date();
+
+      const bookingDateTime = new Date(appointmentDate);
+
+      if (appointmentSlot === "09:00-13:00") {
+        bookingDateTime.setHours(9, 0, 0, 0);
+      } else {
+        bookingDateTime.setHours(14, 0, 0, 0);
+      }
+
+      const diffHours = (bookingDateTime - now) / (1000 * 60 * 60);
+
+      if (diffHours < 24) {
+        return res.status(400).json({
+          success: false,
+          message: "Booking must be made at least 24 hours in advance",
+        });
+      }
+
+      // =========================
+      // WEEKEND VALIDATION
+      // =========================
+
       const day = selectedDate.getDay();
 
-      // Sunday = 0, Saturday = 6
       if (day === 0 || day === 6) {
         return res.status(400).json({
           success: false,
@@ -47,7 +91,10 @@ export default async function handler(req, res) {
         });
       }
 
-      // Check public holiday
+      // =========================
+      // HOLIDAY VALIDATION
+      // =========================
+
       const holiday = await Holiday.findOne({
         date: appointmentDate,
       });
@@ -59,7 +106,10 @@ export default async function handler(req, res) {
         });
       }
 
-      // Check slot availability
+      // =========================
+      // SLOT VALIDATION
+      // =========================
+
       const existingBooking = await Booking.findOne({
         appointmentDate,
         appointmentSlot,
@@ -72,14 +122,20 @@ export default async function handler(req, res) {
         });
       }
 
-      // Generate Reference Number
+      // =========================
+      // GENERATE REFERENCE NUMBER
+      // =========================
+
       const totalBookings = await Booking.countDocuments();
 
       const referenceNo = `MPQ-${new Date().getFullYear()}-${String(
         totalBookings + 1,
       ).padStart(4, "0")}`;
 
-      // Create booking
+      // =========================
+      // CREATE BOOKING
+      // =========================
+
       const booking = await Booking.create({
         referenceNo,
         requesterName,
@@ -90,7 +146,10 @@ export default async function handler(req, res) {
         purpose,
       });
 
-      // Send booking notification
+      // =========================
+      // SEND EMAIL
+      // =========================
+
       await sendBookingNotification(booking);
 
       return res.status(201).json({
@@ -109,6 +168,7 @@ export default async function handler(req, res) {
   // =========================
   // GET ALL BOOKINGS
   // =========================
+
   if (req.method === "GET") {
     try {
       const bookings = await Booking.find().sort({
@@ -130,6 +190,7 @@ export default async function handler(req, res) {
   // =========================
   // METHOD NOT ALLOWED
   // =========================
+
   return res.status(405).json({
     success: false,
     message: "Method Not Allowed",
