@@ -3,21 +3,15 @@ import BookingCalendar from "./BookingCalendar";
 import SlotSelector from "./SlotSelector";
 
 export default function BookingForm() {
-  const [selectedDate, setSelectedDate] = useState(
-    new Date()
-  );
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [availableSlots, setAvailableSlots] =
-    useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]);
 
-  const [selectedSlot, setSelectedSlot] =
-    useState("");
+  const [selectedSlot, setSelectedSlot] = useState("");
 
-  const [message, setMessage] =
-    useState("");
+  const [message, setMessage] = useState("");
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     requesterName: "",
@@ -36,25 +30,29 @@ export default function BookingForm() {
     );
   };
 
+  const formatDisplayDate = (date) =>
+    date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
   useEffect(() => {
     let isMounted = true;
 
     const fetchSlots = async () => {
       try {
-        const formattedDate =
-          formatDate(selectedDate);
+        const formattedDate = formatDate(selectedDate);
 
         const response = await fetch(
-          `/api/available-slots?date=${formattedDate}`
+          `/api/available-slots?date=${formattedDate}`,
         );
 
         const data = await response.json();
 
         if (!isMounted) return;
 
-        setAvailableSlots(
-          data.availableSlots || []
-        );
+        setAvailableSlots(data.availableSlots || []);
 
         setSelectedSlot("");
       } catch (error) {
@@ -70,18 +68,13 @@ export default function BookingForm() {
   }, [selectedDate]);
 
   const refreshSlots = async () => {
-    const formattedDate =
-      formatDate(selectedDate);
+    const formattedDate = formatDate(selectedDate);
 
-    const response = await fetch(
-      `/api/available-slots?date=${formattedDate}`
-    );
+    const response = await fetch(`/api/available-slots?date=${formattedDate}`);
 
     const data = await response.json();
 
-    setAvailableSlots(
-      data.availableSlots || []
-    );
+    setAvailableSlots(data.availableSlots || []);
   };
 
   const handleSubmit = async (e) => {
@@ -91,32 +84,34 @@ export default function BookingForm() {
     setMessage("");
 
     try {
-      const response = await fetch(
-        "/api/bookings",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            ...form,
-            appointmentDate:
-              formatDate(selectedDate),
-            appointmentSlot:
-              selectedSlot,
-          }),
-        }
-      );
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...form,
+          appointmentDate: formatDate(selectedDate),
+          appointmentSlot: selectedSlot,
+        }),
+      });
 
       const data = await response.json();
 
-      setMessage(
-        data.message ||
-          "Booking submitted successfully"
-      );
-
       if (data.success) {
+        setMessage(
+          `Booking submitted successfully.
+
+Reference Number:
+${data.data?.referenceNo || "-"}
+
+Date:
+${formatDisplayDate(selectedDate)}
+
+Slot:
+${selectedSlot}`,
+        );
+
         setForm({
           requesterName: "",
           requesterEmail: "",
@@ -127,13 +122,13 @@ export default function BookingForm() {
         setSelectedSlot("");
 
         await refreshSlots();
+      } else {
+        setMessage(data.message);
       }
     } catch (error) {
       console.error(error);
 
-      setMessage(
-        "Something went wrong. Please try again."
-      );
+      setMessage("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -142,9 +137,7 @@ export default function BookingForm() {
   return (
     <div className="card shadow-sm border-0">
       <div className="card-body p-4">
-        <h4 className="mb-4">
-          Select Appointment Date
-        </h4>
+        <h4 className="mb-4">Select Appointment Date</h4>
 
         <BookingCalendar
           selectedDate={selectedDate}
@@ -153,9 +146,7 @@ export default function BookingForm() {
 
         <hr />
 
-        <h4 className="mb-3">
-          Available Slots
-        </h4>
+        <h4 className="mb-3">Available Slots</h4>
 
         <SlotSelector
           availableSlots={availableSlots}
@@ -167,14 +158,11 @@ export default function BookingForm() {
 
         {message && (
           <div className="alert alert-info">
-            {message}
+            <pre className="mb-0">{message}</pre>
           </div>
         )}
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-4"
-        >
+        <form onSubmit={handleSubmit} className="mt-4">
           <input
             type="text"
             className="form-control mb-3"
@@ -183,8 +171,7 @@ export default function BookingForm() {
             onChange={(e) =>
               setForm({
                 ...form,
-                requesterName:
-                  e.target.value,
+                requesterName: e.target.value,
               })
             }
             required
@@ -198,23 +185,21 @@ export default function BookingForm() {
             onChange={(e) =>
               setForm({
                 ...form,
-                requesterEmail:
-                  e.target.value,
+                requesterEmail: e.target.value,
               })
             }
             required
           />
 
           <input
-            type="text"
+            type="tel"
             className="form-control mb-3"
             placeholder="Phone Number"
             value={form.requesterPhone}
             onChange={(e) =>
               setForm({
                 ...form,
-                requesterPhone:
-                  e.target.value,
+                requesterPhone: e.target.value,
               })
             }
             required
@@ -228,8 +213,7 @@ export default function BookingForm() {
             onChange={(e) =>
               setForm({
                 ...form,
-                purpose:
-                  e.target.value,
+                purpose: e.target.value,
               })
             }
             required
@@ -237,14 +221,10 @@ export default function BookingForm() {
 
           <button
             type="submit"
-            className="btn btn-primary"
-            disabled={
-              !selectedSlot || loading
-            }
+            className="btn btn-primary w-100"
+            disabled={!selectedSlot || loading}
           >
-            {loading
-              ? "Submitting..."
-              : "Submit Booking"}
+            {loading ? "Submitting..." : "Submit Booking"}
           </button>
         </form>
       </div>

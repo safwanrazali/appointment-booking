@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../../components/admin/AdminLayout";
 
 export default function AdminDashboard() {
-  const [stats, setStats] =
-    useState(null);
+  const [stats, setStats] = useState(null);
 
   useEffect(() => {
     async function loadDashboard() {
-      const response = await fetch(
-        "/api/dashboard"
-      );
+      try {
+        const response = await fetch("/api/dashboard");
 
-      const data =
-        await response.json();
+        const data = await response.json();
 
-      setStats(data);
+        setStats(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     loadDashboard();
@@ -22,85 +22,89 @@ export default function AdminDashboard() {
 
   if (!stats) {
     return (
-      <div className="container py-5">
-        Loading...
-      </div>
+      <AdminLayout>
+        <div className="container py-5">Loading...</div>
+      </AdminLayout>
     );
   }
 
   return (
     <AdminLayout>
-    <div className="container py-5">
+      <div className="container-fluid">
+        <div className="mb-4">
+          <h2 className="fw-bold">Dashboard</h2>
 
-      <h1 className="mb-4">
-        Dashboard
-      </h1>
+          <p className="text-muted">PTPKM Appointment Booking Platform</p>
+        </div>
 
-      <div className="row">
+        <div className="row g-4">
+          <div className="col-md-6 col-xl-3">
+            <div className="card dashboard-card h-100">
+              <div className="card-body">
+                <h6 className="text-muted">Total Bookings</h6>
 
-        <div className="col-md-3">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h3>
-                {
-                  stats.totalBookings
-                }
-              </h3>
-              <p>
-                Total Bookings
-              </p>
+                <h2 className="fw-bold">{stats.totalBookings}</h2>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-6 col-xl-3">
+            <div className="card dashboard-card h-100">
+              <div className="card-body">
+                <h6 className="text-muted">This Month</h6>
+
+                <h2 className="fw-bold">{stats.monthlyBookings}</h2>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-6 col-xl-3">
+            <div className="card dashboard-card h-100">
+              <div className="card-body">
+                <h6 className="text-muted">Upcoming</h6>
+
+                <h2 className="fw-bold">{stats.upcomingBookings}</h2>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-6 col-xl-3">
+            <div className="card dashboard-card h-100">
+              <div className="card-body">
+                <h6 className="text-muted">Public Holidays</h6>
+
+                <h2 className="fw-bold">{stats.totalHolidays}</h2>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="col-md-3">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h3>
-                {
-                  stats.monthlyBookings
-                }
-              </h3>
-              <p>
-                This Month
-              </p>
+        <div className="card mt-5 border-0 shadow-sm">
+          <div className="card-body">
+            <h5 className="mb-3">System Information</h5>
+
+            <div className="row">
+              <div className="col-md-6">
+                <p>
+                  <strong>Working Hours:</strong>
+                  <br />
+                  9:00 AM - 6:00 PM
+                </p>
+              </div>
+
+              <div className="col-md-6">
+                <p>
+                  <strong>Available Slots:</strong>
+                  <br />
+                  09:00 - 13:00
+                  <br />
+                  14:00 - 18:00
+                </p>
+              </div>
             </div>
           </div>
         </div>
-
-        <div className="col-md-3">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h3>
-                {
-                  stats.upcomingBookings
-                }
-              </h3>
-              <p>
-                Upcoming
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-3">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h3>
-                {
-                  stats.totalHolidays
-                }
-              </h3>
-              <p>
-                Public Holidays
-              </p>
-            </div>
-          </div>
-        </div>
-
       </div>
-
-    </div>
     </AdminLayout>
   );
 }
