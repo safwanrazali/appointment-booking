@@ -4,7 +4,7 @@ export default function AdminLayout({ children }) {
   const logout = async () => {
     await fetch("/api/admin/logout");
 
-    window.location.href = "/admin/login";
+    window.location.href = "/";
   };
 
   return (
