@@ -11,9 +11,33 @@ body {
 }
 
 // ============================================================
+// Shell layout — sidebar + main content
+// ============================================================
+.admin-shell {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-mobile-topbar {
+  display: none;
+}
+
+.admin-backdrop {
+  display: none;
+}
+
+// ============================================================
 // Sidebar
 // ============================================================
 .admin-sidebar {
+  width: 260px;
+  flex: none;
   background: linear-gradient(180deg, $navy-950 0%, $navy-800 100%);
   min-height: 100vh;
   position: relative;
@@ -92,6 +116,90 @@ body {
     background: rgba($accent, 0.14);
     border-left-color: $accent;
     color: #fff;
+  }
+}
+
+// ============================================================
+// Collapsible sidebar — screens 900px and below
+// ============================================================
+@media (max-width: 900px) {
+  .admin-shell {
+    display: block;
+  }
+
+  .admin-mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    background: linear-gradient(135deg, $navy-950 0%, $navy-800 100%);
+    color: #fff;
+    padding: 0.8rem 1.1rem;
+    box-shadow: $shadow-sm;
+
+    .admin-mobile-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: $font-display;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+  }
+
+  .admin-burger {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex: none;
+    transition: background 0.2s $ease;
+
+    &:hover,
+    &:focus {
+      background: rgba(255, 255, 255, 0.16);
+    }
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    height: 100vh;
+    width: 280px;
+    max-width: 82vw;
+    overflow-y: auto;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform 0.28s $ease;
+    box-shadow: none;
+
+    &.open {
+      transform: translateX(0);
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  .admin-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 15, 36, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 1040;
+    border: none;
+    padding: 0;
+  }
+
+  .admin-main {
+    width: 100%;
   }
 }
 
